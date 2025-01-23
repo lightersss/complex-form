@@ -1,0 +1,25 @@
+{
+  "weight": {
+    "options": [
+      {
+        "label": 630,
+        "value": 630,
+        "unit": "KG"
+      },
+      {
+        "label": 630,
+        "value": 630,
+        "unit": "KG"
+      },
+      {
+        "label": 630,
+        "value": 630,
+        "unit": "KG"
+      }
+    ],
+    "range": {
+      "min": 200,
+      "max": 10000
+    }
+  }
+}
