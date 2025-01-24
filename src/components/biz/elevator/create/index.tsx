@@ -16,14 +16,9 @@ import { z } from "zod";
 import { contact_schema, ContactForm } from "./contact-form";
 import BillForm, { bill_schema } from "./bill-form";
 import { ELEVATOR_TYPE_ENUM } from "./contants";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/src/components/ui/select";
-import { SelectComponent } from "@/src/components/ReactSelect";
+import { CreateableCombobox } from "@/src/components/creatable-combobox";
+import { useState } from "react";
+import { CreateableSelect } from "@/src/components/creatable-select";
 
 export const formSchema = z
   .object({
@@ -33,8 +28,7 @@ export const formSchema = z
     company_address: z.string().trim().nonempty({
       message: "company address could not be empty",
     }),
-
-    product_type: z.nativeEnum(ELEVATOR_TYPE_ENUM),
+    load: z.coerce.number(),
   })
   .merge(contact_schema)
   .merge(bill_schema);
@@ -49,7 +43,7 @@ export function CreateElevatorForm({ res }: { res: number[] }) {
       phone_number: undefined,
       is_same_as_company_address: false,
       bill_address: "",
-      product_type: ELEVATOR_TYPE_ENUM.ESCALATOR,
+      load: undefined,
     },
   });
 
@@ -57,6 +51,7 @@ export function CreateElevatorForm({ res }: { res: number[] }) {
     console.log(values);
   }
 
+  const [v, setv] = useState("");
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-96 space-y-4">
@@ -87,65 +82,42 @@ export function CreateElevatorForm({ res }: { res: number[] }) {
             </FormItem>
           )}
         />
-        <BillForm />{" "}
+        <BillForm />
+
         <FormField
           control={form.control}
-          name="product_type"
+          name="load"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Skills</FormLabel>
-              <SelectComponent
-                createAble
-                {...field}
-                value={field.value}
-                options={[
-                  { value: "Full Time", label: "Full Time" },
-                  { value: "Part Time", label: "Part Time" },
-                  { value: "Intern", label: "Intern" },
-                  { value: "Temporary", label: "Temporary" },
-                  { value: "Contractor", label: "Contractor" },
-                  { value: "Volunteer", label: "Volunteer" },
-                  { value: "Freelance", label: "Freelance" },
-                ]}
-                onChange={field.onChange}
-                placeholder="Select Skills"
-              />
-              <FormMessage />
-            </FormItem>
+            <CreateableSelect
+              inputProps={{
+                type: "number",
+              }}
+              inputToValueFormat={(v) => +v}
+              {...field}
+              value={field.value ? +field.value : ""}
+              options={[
+                { label: 1, value: 1 },
+                { label: 2, value: 2 },
+                { label: 3, value: 3 },
+              ]}
+            />
           )}
         />
-        {/* <FormField
-          control={form.control}
-          name="product_type"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Product Type </FormLabel>
-                <Select
-                  onValueChange={(v) => {
-                    field.onChange(parseInt(v));
-                  }}
-                  defaultValue={field.value + ""}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a verified email to display"></SelectValue>
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {res.map((v) => (
-                      <SelectItem value={v + ""} key={v}>
-                        {v}
-                      </SelectItem>
-                    ))}
-                    <SelectItem value={"custom"}>{"custom"}</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            );
+        <CreateableCombobox
+          options={[
+            { label: 1, value: 1 },
+            { label: 2, value: 2 },
+            { label: 3, value: 3 },
+          ]}
+          inputProps={{
+            placeholder: "custom",
+            type: "number",
           }}
-        /> */}
+          onChange={function (v: string | number): void {
+            setv(v);
+          }}
+          value={v}
+        />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
