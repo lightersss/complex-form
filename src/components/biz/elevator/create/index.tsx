@@ -15,7 +15,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ContactForm } from "./contact-form";
 import BillForm, { bill_schema } from "./bill-form";
-import { CreateableCombobox } from "@/src/components/creatable-combobox";
+import ElevatorDetail, {
+  elevator_detail_schema,
+} from "./elevator-detail/elevator-detail";
 
 export const formSchema = z
   .object({
@@ -34,10 +36,9 @@ export const formSchema = z
       })
       .int({ message: "电话号码需是整数" })
       .positive({ message: "电话号码需大于0" }),
-
-    load: z.coerce.number(),
   })
-  .merge(bill_schema);
+  .merge(bill_schema)
+  .merge(elevator_detail_schema);
 
 export function CreateElevatorForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -87,35 +88,7 @@ export function CreateElevatorForm() {
           )}
         />
         <BillForm />
-        <FormField
-          control={form.control}
-          name="load"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>load</FormLabel>
-                <FormControl>
-                  <div>
-                    <CreateableCombobox
-                      options={[
-                        { label: 1, value: 1 },
-                        { label: 2, value: 2 },
-                        { label: 3, value: 3 },
-                      ]}
-                      inputProps={{
-                        placeholder: "custom",
-                        type: "number",
-                      }}
-                      {...field}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
-
+        <ElevatorDetail />
         <Button type="submit">Submit</Button>
       </form>
     </Form>
