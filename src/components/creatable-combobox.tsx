@@ -53,7 +53,7 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
     : value;
 
   const isInputInOptions = options.find(
-    (option) => option.value.toString() === inputValue.toString()
+    (option) => option.value === inputValue
   );
 
   return (
@@ -103,9 +103,8 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
             </CommandGroup>
             <CommandGroup
               heading="custom"
-              //   forceMount
               //hidden不知道为啥不起作用
-              //   hidden={!!isInputInOptions || !inputValue}
+              // hidden={!!isInputInOptions || !inputValue}
               className={!!isInputInOptions || !inputValue ? "!hidden" : ""}
             >
               <CommandItem

@@ -1,44 +1,48 @@
 import {
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
+  FormLabel,
 } from "@/src/components/ui/form";
 import { Input } from "@/src/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from ".";
-
-export const contact_schema = z.object({
-  phone_distinct: z.coerce.number().int().positive(),
-  phone_number: z.coerce.number().int().positive(),
-});
+import React from "react";
+import { cn } from "@/src/lib/utils";
 
 export function ContactForm() {
   const form = useFormContext<z.infer<typeof formSchema>>();
+
+  const { error: phone_distinct_error } = form.getFieldState("phone_distinct");
+  const { error: phone_number_error } = form.getFieldState("phone_number");
   return (
-    <div>
-      <FormLabel>Contact</FormLabel>
-      <div className="flex mt-2 gap-2">
+    <div className="mt-4 space-y-2">
+      <FormLabel
+        className={cn(
+          (phone_distinct_error || phone_number_error) && "text-destructive"
+        )}
+      >
+        Contact
+      </FormLabel>
+      <div className="flex gap-2 ">
         <FormField
           control={form.control}
           name="phone_distinct"
           render={({ field }) => {
             return (
-              <FormItem className="w-16">
-                <FormControl>
-                  <Input
-                    placeholder="phone distinct"
-                    {...field}
-                    value={field.value ?? ""}
-                    type="number"
-                    min={0}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <>
+                <FormItem className="w-16">
+                  <FormControl>
+                    <Input
+                      placeholder="phone distinct"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
+                  </FormControl>
+                </FormItem>
+              </>
             );
           }}
         />
@@ -52,20 +56,22 @@ export function ContactForm() {
                   <Input
                     placeholder="phone number"
                     {...field}
+                    onChange={(e) => field.onChange(+e.target.value)}
                     value={field.value ?? ""}
                     type="number"
                     min={0}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             );
           }}
         />
       </div>
-      <FormDescription className="mt-2">
-        This is your public display name.
-      </FormDescription>
+      {(phone_distinct_error || phone_number_error) && (
+        <FormMessage>
+          {(phone_distinct_error || phone_number_error)?.message}
+        </FormMessage>
+      )}
     </div>
   );
 }
