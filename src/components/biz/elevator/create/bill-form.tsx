@@ -11,37 +11,33 @@ import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { formSchema } from ".";
 import { Input } from "@/src/components/ui/input";
-import { cn } from "@/src/lib/utils";
 
-export const bill_schema = z.object({
-  bill_address: z.string().trim().nonempty({
-    message: "bill address could not be empty",
-  }),
-  // use_company_address: z.boolean(),
+export const billSchema = z.object({
+  billAddress: z.string().trim().nonempty({}),
 });
 
 export default function BillForm() {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
-  const [is_same, set_is_same] = useState(true);
+  const [isSame, setIsSame] = useState(true);
 
   const { watch, setValue, trigger } = form;
 
   useEffect(() => {
     const { unsubscribe } = watch((data, { name }) => {
-      if (name !== "company_address" || !is_same) return;
-      setValue("bill_address", data.company_address ?? "");
-      trigger("bill_address");
+      if (name !== "companyAddress" || !isSame) return;
+      setValue("billAddress", data.companyAddress ?? "");
+      trigger("billAddress");
     });
 
     return unsubscribe;
-  }, [watch, setValue, trigger, is_same]);
+  }, [watch, setValue, trigger, isSame]);
 
   return (
     <div className="mt-4">
       <FormField
         control={form.control}
-        name="bill_address"
+        name="billAddress"
         render={({ field }) => {
           return (
             <>
@@ -53,23 +49,31 @@ export default function BillForm() {
                   </FormLabel>
                   <FormControl>
                     <Checkbox
-                      checked={is_same}
+                      checked={isSame}
                       onCheckedChange={(v) => {
                         if (v === true) {
                           form.setValue(
-                            "bill_address",
-                            form.getValues("company_address")
+                            "billAddress",
+                            form.getValues("companyAddress")
                           );
                         } else {
-                          form.setValue("bill_address", "");
+                          form.setValue("billAddress", "");
                         }
-                        set_is_same(v === "indeterminate" ? false : v);
+                        setIsSame(v === "indeterminate" ? false : v);
                       }}
                     />
                   </FormControl>
                 </div>
-                <FormControl className={cn(is_same && "hidden")}>
-                  <Input placeholder="enter your company name" {...field} />
+                <FormControl>
+                  <Input
+                    placeholder={
+                      isSame
+                        ? "This will changed with company address"
+                        : "Enter your bill address"
+                    }
+                    {...field}
+                    disabled={isSame}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

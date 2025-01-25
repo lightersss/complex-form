@@ -7,7 +7,6 @@ import {
   FormMessage,
 } from "@/src/components/ui/form";
 import {
-  ELEVATOR_TYPE,
   ELEVATOR_TYPE_ENUM,
   ELEVATOR_TYPE_MAP,
 } from "@/src/constants/elevator-type";
@@ -23,30 +22,37 @@ import {
 } from "@/src/components/ui/select";
 import useElevatorOptions from "./useElevatorOptions";
 
-export const elevator_detail_schema = z.object({
-  product_type: z.number(),
-  load: z.coerce.number().optional(),
-  width: z.coerce.number().optional(),
-  depth: z.number().optional(),
+export const elevatorDetailSchema = z.object({
+  load: z
+    .number()
+    .min(200, "Load must be at least 200")
+    .max(10000, "Load must be at most 10000"),
+  width: z
+    .number()
+    .min(1000, "Width must be at least 1000")
+    .max(2000, "Width must be at most 2000"),
+  depth: z
+    .number()
+    .min(1000, "Depth must be at least 1000")
+    .max(2500, "Depth must be at most 2500"),
 });
 
 const ElevatorDetail = () => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
-  const [product_type] = form.watch(["product_type"]);
+  const [productType] = form.watch(["productType"]);
 
   const { widthOptions, loadOptions, depthOptions } = useElevatorOptions();
 
-  console.log(product_type);
   return (
     <>
       <FormField
         control={form.control}
-        name="product_type"
+        name="productType"
         render={({ field }) => {
           return (
             <FormItem>
-              <FormLabel>product_type</FormLabel>
+              <FormLabel>Product Type</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(v) => field.onChange(+v)}
@@ -73,7 +79,7 @@ const ElevatorDetail = () => {
           );
         }}
       />
-      {
+      {productType === ELEVATOR_TYPE_ENUM.PASSAGER_ELEVATOR && (
         <>
           <FormField
             control={form.control}
@@ -81,14 +87,17 @@ const ElevatorDetail = () => {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>load( KG )</FormLabel>
+                  <FormLabel>load ( KG )</FormLabel>
                   <FormControl>
                     <div>
                       <CreateableCombobox
                         options={loadOptions}
+                        popoverTriggerPlaceholder="Choose the elevator load"
                         inputProps={{
-                          placeholder: "custom",
+                          placeholder: "custom, 200 - 10000",
                           type: "number",
+                          min: 200,
+                          max: 10000,
                         }}
                         {...field}
                         onChange={(e) => {
@@ -109,14 +118,17 @@ const ElevatorDetail = () => {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>width(mm)</FormLabel>
+                  <FormLabel>width ( mm )</FormLabel>
                   <FormControl>
                     <div>
                       <CreateableCombobox
                         options={widthOptions}
+                        popoverTriggerPlaceholder="Choose the elevator width"
                         inputProps={{
-                          placeholder: "custom",
+                          placeholder: "custom, 1000 - 2000",
                           type: "number",
+                          min: 1000,
+                          max: 2000,
                         }}
                         onChange={(e) => {
                           field.onChange(+e);
@@ -137,14 +149,17 @@ const ElevatorDetail = () => {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>depth(mm)</FormLabel>
+                  <FormLabel>depth ( mm )</FormLabel>
                   <FormControl>
                     <div>
                       <CreateableCombobox
                         options={depthOptions}
+                        popoverTriggerPlaceholder="Choose the elevator depth"
                         inputProps={{
-                          placeholder: "custom",
+                          placeholder: "custom, 1000 - 2500",
                           type: "number",
+                          min: 1000,
+                          max: 2500,
                         }}
                         onChange={(e) => {
                           field.onChange(+e);
@@ -159,7 +174,7 @@ const ElevatorDetail = () => {
             }}
           />
         </>
-      }
+      )}
     </>
   );
 };

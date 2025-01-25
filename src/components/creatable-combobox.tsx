@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/src/components/ui/popover";
 import { useState } from "react";
-import { isNil } from "../lib/isNil";
+// import { isNil } from "../lib/isNil";
 import { Input } from "./ui/input";
 
 type CreateableComboboxProps = {
@@ -42,19 +42,17 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
 
   const [open, setOpen] = React.useState(false);
 
-  const possibleOptions = options.find((option) => option.value === value);
+  const possibleOptions = options.find((option) => option.value == value);
 
   const [inputValue, setInputValue] = useState(possibleOptions ? "" : value);
 
   const labelInTrigger = possibleOptions
     ? possibleOptions.label
-    : isNil(value)
+    : !value
     ? popoverTriggerPlaceholder
     : value;
 
-  const isInputInOptions = options.find(
-    (option) => option.value === inputValue
-  );
+  const isInputInOptions = options.find((option) => option.value == inputValue);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,10 +61,10 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="min-w-[200px] justify-between"
         >
-          <div>{labelInTrigger}</div>
-          <ChevronsUpDown className="opacity-50" />
+          {labelInTrigger}
+          <ChevronsUpDown className="opacity-50 ml-auto" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -103,8 +101,6 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
             </CommandGroup>
             <CommandGroup
               heading="custom"
-              //hidden不知道为啥不起作用
-              // hidden={!!isInputInOptions || !inputValue}
               className={!!isInputInOptions || !inputValue ? "!hidden" : ""}
             >
               <CommandItem
