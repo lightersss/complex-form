@@ -71,14 +71,7 @@ export function ContactForm() {
             return (
               <FormItem className="grow">
                 <FormControl>
-                  <Input
-                    placeholder="Enter your phone number"
-                    {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
-                    value={field.value ?? ""}
-                    type="number"
-                    min={0}
-                  />
+                  <Input placeholder="Enter your phone number" {...field} />
                 </FormControl>
               </FormItem>
             );

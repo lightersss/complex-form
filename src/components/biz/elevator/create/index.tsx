@@ -29,6 +29,7 @@ export function CreateElevatorForm() {
       companyAddress: "",
       billAddress: "",
       phoneDistinct: "",
+      phoneNumber: "",
       productType: ELEVATOR_TYPE_ENUM.ESCALATOR,
     },
   });
@@ -53,7 +54,6 @@ export function CreateElevatorForm() {
             </FormItem>
           )}
         />
-
         <ContactForm />
         <FormField
           control={form.control}
@@ -70,7 +70,6 @@ export function CreateElevatorForm() {
         />
         <BillForm />
         <ElevatorDetail />
-
         <Button type="submit">Submit</Button>
       </form>
     </Form>
