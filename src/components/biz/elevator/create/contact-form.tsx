@@ -27,7 +27,10 @@ export function ContactForm() {
       try {
         const json = await response.json();
         form.setValue("phoneDistinct", json.country_code);
-      } catch {}
+      } catch {
+        form.setValue("phoneDistinct", "US");
+        console.error("get country error");
+      }
     };
     initCountry();
   }, []);

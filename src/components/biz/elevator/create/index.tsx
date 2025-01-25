@@ -28,6 +28,7 @@ export function CreateElevatorForm() {
       companyName: "",
       companyAddress: "",
       billAddress: "",
+      phoneDistinct: "",
       productType: ELEVATOR_TYPE_ENUM.ESCALATOR,
     },
   });
