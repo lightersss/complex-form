@@ -9,9 +9,9 @@ const basicSchema = z
     companyName: z.string().trim().nonempty({}),
     companyAddress: z.string().trim().nonempty({}),
     phoneDistinct: z
-      .string({})
+      .string()
       .transform((v) => `+${getCountryCallingCode(v as Country)}`),
-    phoneNumber: z.number().int().positive(),
+    phoneNumber: z.coerce.number().int().positive(),
   })
   .merge(billSchema);
 
