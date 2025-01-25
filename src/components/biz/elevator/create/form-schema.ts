@@ -11,7 +11,10 @@ const basicSchema = z
     phoneDistinct: z
       .string()
       .transform((v) => `+${getCountryCallingCode(v as Country)}`),
-    phoneNumber: z.coerce.number().int().positive(),
+    phoneNumber: z
+      .string()
+      .min(1)
+      .regex(/^\d+$/, { message: "Only accept numers" }),
   })
   .merge(billSchema);
 
