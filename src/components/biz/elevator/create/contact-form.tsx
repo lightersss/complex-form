@@ -69,7 +69,7 @@ export function ContactForm() {
               <FormItem className="grow">
                 <FormControl>
                   <Input
-                    placeholder="phone number"
+                    placeholder="Enter your phone number"
                     {...field}
                     onChange={(e) => field.onChange(+e.target.value)}
                     value={field.value ?? ""}

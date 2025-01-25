@@ -132,6 +132,7 @@ const ElevatorDetail = () => {
                         }}
                         onChange={(e) => {
                           field.onChange(+e);
+                          //   form.trigger("width");
                         }}
                         value={field.value ?? ""}
                       />
@@ -163,6 +164,7 @@ const ElevatorDetail = () => {
                         }}
                         onChange={(e) => {
                           field.onChange(+e);
+                          //   form.trigger("depth");
                         }}
                         value={field.value ?? ""}
                       />

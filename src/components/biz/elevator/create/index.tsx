@@ -23,6 +23,7 @@ import { formSchema } from "./form-schema";
 export function CreateElevatorForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    mode: "all",
     defaultValues: {
       companyName: "",
       companyAddress: "",

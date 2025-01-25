@@ -30,15 +30,24 @@ const getAvailableOptions = (
     }));
 };
 
-const getCurrentValue = (available: { value: number }[], current: number) => {
-  if (!available.map(({ value }) => value).includes(current ?? 0)) {
-    return available?.[0]?.value;
+const getNextValue = (
+  available: { value: number }[],
+  current: number,
+  allOptions: typeof WIDTH_OPTIONS | typeof DEPTH_OPTIONS
+) => {
+  if (available.map(({ value }) => value).includes(current ?? 0)) {
+    return current;
   }
-  return current;
+
+  if (current && !allOptions.map(({ value }) => value).includes(current ?? 0)) {
+    return current;
+  }
+
+  return available[0]?.value;
 };
 
 const useElevatorOptions = () => {
-  const { watch, trigger, setValue } =
+  const { watch, trigger, setValue, resetField } =
     useFormContext<z.infer<typeof formSchema>>();
 
   const [widthOptions, setWidthOptions] = useState<
@@ -49,37 +58,45 @@ const useElevatorOptions = () => {
     { label: string; value: number }[]
   >([]);
 
-  // 通用的获取可用选项函数
-
-  // 通用的更新值函数
-
   useEffect(() => {
     const { unsubscribe } = watch((data, { name }) => {
       if ((name !== "load" && name !== "width") || !("width" in data)) return;
-      let currentWidth = data.width;
+      const currentWidth = data.width;
       if (name === "load") {
         const availableWidth = getAvailableOptions(WIDTH_OPTIONS, {
           load: data.load,
         });
         setWidthOptions(availableWidth);
-        currentWidth = getCurrentValue(availableWidth, data.width ?? 0);
-        setValue("width", currentWidth);
-        trigger("width");
+        const nextWidth = getNextValue(
+          availableWidth,
+          data.width ?? 0,
+          WIDTH_OPTIONS
+        );
+        if (nextWidth) {
+          setValue("width", nextWidth);
+          trigger("width");
+        }
       }
 
-      //width变化
       const availableDepth = getAvailableOptions(DEPTH_OPTIONS, {
         width: currentWidth,
         load: data.load,
       });
       setDepthOptions(availableDepth);
-      const currentDepth = getCurrentValue(availableDepth, data.depth ?? 0);
-      setValue("depth", currentDepth);
-      trigger("depth");
+      const nextDepth = getNextValue(
+        availableDepth,
+        data.depth ?? 0,
+        DEPTH_OPTIONS
+      );
+
+      if (nextDepth) {
+        setValue("depth", nextDepth);
+        trigger("depth");
+      }
     });
 
     return unsubscribe;
-  }, [watch, trigger, setValue]);
+  }, [watch, trigger, setValue, resetField]);
 
   return {
     widthOptions,

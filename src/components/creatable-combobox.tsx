@@ -114,7 +114,7 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
                 <Check
                   className={cn(
                     "ml-auto",
-                    value === inputValue ? "opacity-100" : "opacity-0"
+                    value == inputValue ? "opacity-100" : "opacity-0"
                   )}
                 />
               </CommandItem>
