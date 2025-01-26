@@ -23,6 +23,7 @@ import { Input } from "./ui/input";
 type CreateableComboboxProps = {
   options: { label: React.ReactNode; value: string | number }[];
   onChange: (v: string | number) => void;
+  onBlur?:(e:Event)=>void
   value: string | number;
   inputProps?: React.DetailedHTMLProps<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -37,6 +38,7 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
     inputProps = {},
     popoverTriggerPlaceholder = null,
     value,
+    onBlur,
     onChange,
   } = props;
 
@@ -67,7 +69,9 @@ export function CreateableCombobox(props: CreateableComboboxProps) {
           <ChevronsUpDown className="opacity-50 ml-auto" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0" onPointerDownOutside={(e)=>{
+        onBlur?.(e)
+      }}>
         <Command shouldFilter={false}>
           <div className="flex">
             <Input

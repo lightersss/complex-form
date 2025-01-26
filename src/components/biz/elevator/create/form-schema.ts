@@ -8,7 +8,7 @@ const basicSchema = z
   .object({
     companyName: z.string().trim().nonempty({}),
     companyAddress: z.string().trim().nonempty({}),
-    phoneDistinct: z
+    phoneCode: z
       .string()
       .transform((v) => `+${getCountryCallingCode(v as Country)}`),
     phoneNumber: z
