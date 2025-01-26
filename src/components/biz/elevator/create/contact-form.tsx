@@ -11,14 +11,14 @@ import { z } from "zod";
 import { formSchema } from ".";
 import React, { useEffect } from "react";
 import { cn } from "@/src/lib/utils";
-import { CountrySelect } from "@/src/components/phone-input";
+import { CountrySelect } from "@/src/components/country-select";
 import { Country } from "react-phone-number-input";
 import { COUNTRY_CODES } from "@/src/data/country-codes";
 
 export function ContactForm() {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
-  const { error: phoneDistinctError } = form.getFieldState("phoneDistinct");
+  const { error: phoneCodeError } = form.getFieldState("phoneCode");
   const { error: phoneNumberError } = form.getFieldState("phoneNumber");
 
   useEffect(() => {
@@ -26,9 +26,9 @@ export function ContactForm() {
       const response = await fetch("https://ipapi.co/json");
       try {
         const json = await response.json();
-        form.setValue("phoneDistinct", json.country_code);
+        form.setValue("phoneCode", json.country_code);
       } catch {
-        form.setValue("phoneDistinct", "US");
+        form.setValue("phoneCode", "US");
         console.error("get country error");
       }
     };
@@ -39,7 +39,7 @@ export function ContactForm() {
     <div className="mt-4 space-y-2">
       <FormLabel
         className={cn(
-          (phoneNumberError || phoneDistinctError) && "text-destructive"
+          (phoneNumberError || phoneCodeError) && "text-destructive"
         )}
       >
         Contact
@@ -47,7 +47,7 @@ export function ContactForm() {
       <div className="flex gap-2 ">
         <FormField
           control={form.control}
-          name="phoneDistinct"
+          name="phoneCode"
           render={({ field }) => {
             return (
               <>
@@ -78,9 +78,9 @@ export function ContactForm() {
           }}
         />
       </div>
-      {(phoneDistinctError || phoneNumberError) && (
+      {(phoneCodeError || phoneNumberError) && (
         <FormMessage>
-          {(phoneDistinctError || phoneNumberError)?.message}
+          {(phoneCodeError || phoneNumberError)?.message}
         </FormMessage>
       )}
     </div>

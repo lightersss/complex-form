@@ -28,7 +28,7 @@ export function CreateElevatorForm() {
       companyName: "",
       companyAddress: "",
       billAddress: "",
-      phoneDistinct: "",
+      phoneCode: "",
       phoneNumber: "",
       productType: ELEVATOR_TYPE_ENUM.ESCALATOR,
     },

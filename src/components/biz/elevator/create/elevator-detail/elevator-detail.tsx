@@ -40,7 +40,7 @@ export const elevatorDetailSchema = z.object({
 const ElevatorDetail = () => {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
-  const [productType] = form.watch(["productType"]);
+  const productType = form.watch("productType");
 
   const { widthOptions, loadOptions, depthOptions } = useElevatorOptions();
 
@@ -130,9 +130,9 @@ const ElevatorDetail = () => {
                           min: 1000,
                           max: 2000,
                         }}
+                        {...field}
                         onChange={(e) => {
                           field.onChange(+e);
-                          //   form.trigger("width");
                         }}
                         value={field.value ?? ""}
                       />
@@ -162,9 +162,9 @@ const ElevatorDetail = () => {
                           min: 1000,
                           max: 2500,
                         }}
+                        {...field}
                         onChange={(e) => {
                           field.onChange(+e);
-                          //   form.trigger("depth");
                         }}
                         value={field.value ?? ""}
                       />
